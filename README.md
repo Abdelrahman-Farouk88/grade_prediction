@@ -62,49 +62,44 @@ The project follows best practices for ML engineering with a modular, scalable a
 ```
 ml_project/
 │
-├── app.py                          # Flask application entry point
-├── setup.py                        # Package setup configuration
+├── app.py                          # Flask web app (main entry point)
+├── setup.py                        # Package setup
 ├── requirements.txt                # Python dependencies
 ├── README.md                       # Project documentation
 │
-├── src/                            # Source code directory
-│   ├── __init__.py
-│   ├── exception.py                # Custom exception handling
-│   ├── logger.py                   # Logging configuration
-│   ├── utils.py                    # Utility functions
-│   │
-│   ├── components/                 # ML pipeline components
-│   │   ├── __init__.py
-│   │   ├── data_ingestion.py      # Data loading and splitting
-│   │   ├── data_transformation.py # Feature preprocessing
-│   │   └── model_trainer.py       # Model training and evaluation
-│   │
+├── src/                            # Source code
+│   ├── exception.py                # Custom exception class
+│   ├── logger.py                   # Logging setup
+│   ├── utils.py                    # Utility functions (save/load, evaluation)
+│   ├── components/                 # ML pipeline modules
+│   │   ├── data_ingestion.py       # Data loading/splitting
+│   │   ├── data_transformation.py  # Preprocessing (imputation, encoding, scaling)
+│   │   └── model_trainer.py        # Model training, selection, evaluation
 │   └── pipeline/                   # End-to-end pipelines
-│       ├── __init__.py
-│       ├── train_pipeline.py      # Training pipeline
-│       └── predict_pipeline.py    # Prediction pipeline
+│       ├── train_pipeline.py       # Training pipeline (calls all steps)
+│       └── predict_pipeline.py     # Prediction pipeline (API for inference)
 │
-├── templates/                      # HTML templates
-│   ├── index.html                 # Landing page
-│   └── home.html                  # Prediction form page
+├── templates/                      # HTML templates (Flask)
+│   ├── index.html                  # Landing page
+│   └── home.html                   # Prediction form
 │
-├── static/                         # Static files
+├── static/                         # Static files (CSS)
 │   └── css/
-│       └── style.css              # Stylesheet
+│       └── style.css
 │
 ├── artifacts/                      # Generated files
-│   ├── data.csv                   # Raw data
-│   ├── train.csv                  # Training dataset
-│   ├── test.csv                   # Test dataset
-│   ├── preprocessor.pkl           # Preprocessing pipeline
-│   └── model.pkl                  # Trained model
+│   ├── data.csv                    # Raw data
+│   ├── train.csv                   # Training set
+│   ├── test.csv                    # Test set
+│   ├── preprocessor.pkl            # Preprocessing pipeline
+│   └── model.pkl                   # Trained model
 │
-├── logs/                           # Application logs
-├── notebook/                       # Jupyter notebooks for EDA
+├── logs/                           # Execution logs
+├── notebook/                       # Jupyter notebooks (EDA, experiments)
 │   └── data/
-│       └── data.csv               # Original dataset
+│       └── data.csv                # Original dataset
 │
-└── venv/                          # Virtual environment (not in git)
+└── env/ or venv/                   # Virtual environment (not in git)
 ```
 
 ## 🚀 Installation
@@ -168,6 +163,7 @@ This will:
 
 ### Running the Web Application
 
+
 1. **Start the Flask server**:
    ```bash
    python app.py
@@ -186,18 +182,18 @@ This will:
 ```python
 from src.pipeline.predict_pipeline import CustomData, PredictPipeline
 
-# Create input data
+# Prepare input data (ensure feature names match training)
 data = CustomData(
-    gender='female',
-    race_ethnicity='group B',
-    parental_level_of_education="bachelor's degree",
-    lunch='standard',
-    test_preparation_course='none',
-    reading_score=72,
-    writing_score=74
+   gender='female',
+   race_ethnicity='group B',
+   parental_level_of_education="bachelor's degree",
+   lunch='standard',
+   test_preparation_course='none',
+   reading_score=72,
+   writing_score=74
 )
 
-# Get prediction
+# Predict
 predict_pipeline = PredictPipeline()
 prediction = predict_pipeline.predict(data.get_data_as_frame())
 print(f"Predicted Math Score: {prediction[0]:.2f}")
@@ -236,6 +232,7 @@ The system automatically evaluates and compares the following regression models:
 
 ## 📡 API Documentation
 
+
 ### Web Routes
 
 #### `GET /`
@@ -249,13 +246,13 @@ The system automatically evaluates and compares the following regression models:
 #### `POST /predictdata`
 - **Description**: Submit prediction request
 - **Request Body** (form data):
-  - `gender`: "male" or "female"
-  - `ethnicity`: "group A", "group B", "group C", "group D", or "group E"
-  - `parental_level_of_education`: "associate's degree", "bachelor's degree", "high school", "master's degree", "some college", or "some high school"
-  - `lunch`: "free/reduced" or "standard"
-  - `test_preparation_course`: "none" or "completed"
-  - `reading_score`: Number (0-100)
-  - `writing_score`: Number (0-100)
+   - `gender`: "male" or "female"
+   - `ethnicity`: "group A", "group B", "group C", "group D", or "group E"
+   - `parental_level_of_education`: "associate's degree", "bachelor's degree", "high school", "master's degree", "some college", or "some high school"
+   - `lunch`: "free/reduced" or "standard"
+   - `test_preparation_course`: "none" or "completed"
+   - `reading_score`: Number (0-100)
+   - `writing_score`: Number (0-100)
 - **Response**: Renders `home.html` with prediction result
 
 ### Python API
@@ -264,13 +261,13 @@ The system automatically evaluates and compares the following regression models:
 
 ```python
 CustomData(
-    gender: str,
-    race_ethnicity: str,
-    parental_level_of_education: str,
-    lunch: str,
-    test_preparation_course: str,
-    reading_score: int,
-    writing_score: int
+      gender: str,
+      race_ethnicity: str,
+      parental_level_of_education: str,
+      lunch: str,
+      test_preparation_course: str,
+      reading_score: int,
+      writing_score: int
 )
 ```
 
@@ -288,14 +285,14 @@ PredictPipeline()
 
 ## 🔧 Development
 
-### Running Tests
 
-Currently, the project uses logging for debugging. Check the `logs/` directory for detailed execution logs.
+### Debugging & Logs
+
+- All pipeline steps and errors are logged to the `logs/` directory. Check the latest log file for debugging.
 
 ### Adding New Models
 
 To add a new model to the training pipeline:
-
 1. Import the model in `src/components/model_trainer.py`
 2. Add it to the `models` dictionary
 3. Add hyperparameters to the `params` dictionary
@@ -308,6 +305,19 @@ Edit `src/components/data_transformation.py` to modify:
 - Encoding strategies
 - Scaling methods
 - Missing value handling
+
+### Error Handling
+
+- All exceptions are wrapped in a custom `CustomException` class for detailed tracebacks.
+- Errors are logged with file name and line number for easier debugging.
+
+### Tips
+- Ensure you activate the correct virtual environment before running scripts.
+- If you encounter missing file errors, check that `notebook/data/data.csv` and `artifacts/model.pkl` exist.
+- For port conflicts, change the port in `app.py` (e.g., `app.run(host='0.0.0.0', port=5001)`).
+
+### Testing
+- No automated tests are included; use logs and manual runs to verify functionality.
 
 ## 🤝 Contributing
 
