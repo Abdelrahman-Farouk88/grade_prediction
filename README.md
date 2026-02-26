@@ -386,12 +386,3 @@ Check the training logs in `logs/` directory for detailed performance metrics of
 - [Pandas Documentation](https://pandas.pydata.org/docs/)
 
 ---
-
-**Note**: This is an educational project. For production use, consider adding:
-- Input validation and sanitization
-- Authentication and authorization
-- API rate limiting
-- Comprehensive testing suite
-- CI/CD pipeline
-- Docker containerization
-- Database integration for storing predictions
